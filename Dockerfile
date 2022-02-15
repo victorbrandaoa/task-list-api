@@ -1,13 +1,13 @@
 FROM node:16.14.0-alpine3.14
 
-WORKDIR /usr/src/app
+WORKDIR /
 
 COPY package*.json ./
 
 RUN npm install glob rimraf
 
-RUN npm install --only=development
+RUN npm install
 
 COPY . .
 
-RUN npm run start:dev
+RUN npm run start
