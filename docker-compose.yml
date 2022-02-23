@@ -7,4 +7,19 @@ services:
     volumes:
       - ./:/app:cached
     ports:
-      - $API_PORT:$API_PORT
+      - ${API_PORT}:${API_PORT}
+    depends_on:
+      - tasks-bd
+    environment:
+      - MONGO_HOST=tasks-bd
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_DATABASE=${MONGO_DATABASE}
+      - API_PORT=${API_PORT}
+  
+  tasks-bd:
+    image: mongo
+    command: mongod --port ${MONGO_PORT}
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+    volumes:
+      - ./volumes/mongodb:/data/tasks-bd
