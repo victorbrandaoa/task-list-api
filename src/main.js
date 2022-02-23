@@ -6,6 +6,6 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  await app.listen(configService.get('API_PORT'));
+  await app.listen(configService.get('port'));
 }
 bootstrap();
