@@ -1,5 +1,5 @@
 import { Controller, Get, Dependencies } from '@nestjs/common';
-import { StatusService } from '../services';
+import { StatusService } from './status.service';
 
 @Controller('status')
 @Dependencies(StatusService)
