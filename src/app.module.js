@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database.module';
+import { StatusModule } from './modules';
 import config from './config';
 
 @Module({
@@ -8,7 +9,8 @@ import config from './config';
     ConfigModule.forRoot({
       load: [config]
     }),
-    DatabaseModule
+    DatabaseModule,
+    StatusModule
   ],
   controllers: [],
   providers: [],
