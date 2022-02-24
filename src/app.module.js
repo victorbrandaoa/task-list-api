@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DatabaseModule } from './database.module';
 import config from './config';
 
 @Module({
@@ -11,14 +10,7 @@ import config from './config';
     ConfigModule.forRoot({
       load: [config]
     }),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService) => ({
-        uri: `mongodb://${configService.get('database.host')}:${configService.get('database.port')}`,
-        dbName: configService.get('database.name')
-      }),
-      inject: [ConfigService]
-    })
+    DatabaseModule
   ],
   controllers: [AppController],
   providers: [AppService],
