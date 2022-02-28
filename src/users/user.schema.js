@@ -7,7 +7,16 @@ export class User {
   name;
 
   @Prop({ type: mongoose.Schema.Types.String, required: true })
+  lastName;
+
+  @Prop({ type: mongoose.Schema.Types.String, required: true, unique: true })
+  email;
+
+  @Prop({ type: mongoose.Schema.Types.String })
   age;
+
+  @Prop({ type: mongoose.Schema.Types.String, required: true })
+  password;
 
 }
 

@@ -10,12 +10,22 @@ export class UsersService {
     this.userModel = userModel;
   }
 
+  async getUserByEmail(email) {
+    return this.userModel.findOne({ email });
+  }
+
+  async getAllUsers() {
+    return this.userModel.find({});
+  }
+
   async postUser(user) {
     const createdUser = new this.userModel(user);
     return createdUser.save();
   }
 
-  async getAllUsers() {
-    return this.userModel.find().exec();
+  async putUser(email, user) {
+    const userToUpdate = this.getUserByEmail(email);
+    return this.userModel.updateOne({ email }, user);
   }
+
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Dependencies, Post, Body, Bind } from '@nestjs/common';
+import { Controller, Get, Dependencies, Post, Put, Body, Bind, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -7,6 +7,12 @@ export class UsersController {
 
   constructor(usersService) {
     this.usersService = usersService;
+  }
+
+  @Get(':email')
+  @Bind(Param())
+  async getUserByEmail(params) {
+    return this.usersService.getUserByEmail(params.email);
   }
 
   @Get()
@@ -19,4 +25,11 @@ export class UsersController {
   async postUser(user) {
     return this.usersService.postUser(user);
   }
+
+  @Put(':email')
+  @Bind(Body(), Param())
+  async putUser(user, params) {
+    return this.usersService.putUser(params.email, user);
+  }
+
 }
