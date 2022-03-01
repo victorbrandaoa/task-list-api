@@ -1,4 +1,4 @@
-import { Controller, Get, Dependencies, Post, Put, Body, Bind, Param } from '@nestjs/common';
+import { Controller, Get, Dependencies, Post, Put, Delete, Body, Bind, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -32,4 +32,9 @@ export class UsersController {
     return this.usersService.putUser(params.email, user);
   }
 
+  @Delete(':email')
+  @Bind(Param())
+  async deleteUser(params) {
+    return this.usersService.deleteUser(params.email);
+  }
 }
