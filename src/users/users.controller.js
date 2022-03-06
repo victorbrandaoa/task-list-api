@@ -13,6 +13,7 @@ export class UsersController {
   @Get(':email')
   @Bind(Param())
   async getUserByEmail(params) {
+    Validator.checkEmail(params.email);
     return this.usersService.getUserByEmail(params.email);
   }
 
@@ -32,12 +33,14 @@ export class UsersController {
   @Bind(Body(), Param())
   async putUser(user, params) {
     Validator.checkUserValidity(user);
+    Validator.checkEmail(params.email);
     return this.usersService.putUser(params.email, user);
   }
 
   @Delete(':email')
   @Bind(Param())
   async deleteUser(params) {
+    Validator.checkEmail(params.email);
     return this.usersService.deleteUser(params.email);
   }
 }
