@@ -3,20 +3,14 @@ import * as mongoose from 'mongoose';
 
 @Schema()
 export class User {
-  @Prop({ type: mongoose.Schema.Types.String, required: true })
-  name;
-
-  @Prop({ type: mongoose.Schema.Types.String, required: true })
-  lastName;
-
   @Prop({ type: mongoose.Schema.Types.String, required: true, unique: true })
-  email;
-
-  @Prop({ type: mongoose.Schema.Types.String })
-  age;
+  username;
 
   @Prop({ type: mongoose.Schema.Types.String, required: true })
   password;
+
+  @Prop({ type: mongoose.Schema.Types.String })
+  age;
 
 }
 

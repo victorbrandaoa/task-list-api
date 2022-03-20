@@ -15,16 +15,16 @@ export class UsersService {
     this.userModel = userModel;
   }
 
-  async existsUser(email) {
-    return this.userModel.exists({ email });
+  async existsUser(username) {
+    return this.userModel.exists({ username });
   }
 
-  async getUserByEmail(email) {
-    const userExists = await this.existsUser(email);
+  async getUserByUsername(username) {
+    const userExists = await this.existsUser(username);
     if (!userExists) {
-      throw new NotFoundException(`User with email ${email} not found.`);
+      throw new NotFoundException(`User ${username} not found.`);
     }
-    return this.userModel.findOne({ email });
+    return this.userModel.findOne({ username });
   }
 
   async getAllUsers() {
@@ -32,22 +32,22 @@ export class UsersService {
   }
 
   async postUser(user) {
-    const userExists = await this.existsUser(user.email);
+    const userExists = await this.existsUser(user.username);
     if (userExists) {
-      throw new ConflictException(`User with email ${user.email} already exists.`);
+      throw new ConflictException(`User ${user.username} already exists.`);
     }
     const createdUser = new this.userModel(user);
     return createdUser.save();
   }
 
-  async putUser(email, user) {
-    await this.getUserByEmail(email);
-    return this.userModel.updateOne({ email }, user);
+  async putUser(username, user) {
+    await this.getUserByUsername(username);
+    return this.userModel.updateOne({ username }, user);
   }
 
-  async deleteUser(email) {
-    await this.getUserByEmail(email);
-    return this.userModel.deleteOne({ email });
+  async deleteUser(username) {
+    await this.getUserByUsername(username);
+    return this.userModel.deleteOne({ username });
   }
 
 }

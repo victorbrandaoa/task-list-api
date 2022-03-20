@@ -10,11 +10,10 @@ export class UsersController {
     this.usersService = usersService;
   }
 
-  @Get(':email')
+  @Get(':username')
   @Bind(Param())
-  async getUserByEmail(params) {
-    Validator.checkEmail(params.email);
-    return this.usersService.getUserByEmail(params.email);
+  async getUserByUsername(params) {
+    return this.usersService.getUserByUsername(params.username);
   }
 
   @Get()
@@ -29,18 +28,16 @@ export class UsersController {
     return this.usersService.postUser(user);
   }
 
-  @Put(':email')
+  @Put(':username')
   @Bind(Body(), Param())
   async putUser(user, params) {
     Validator.checkUserValidity(user);
-    Validator.checkEmail(params.email);
-    return this.usersService.putUser(params.email, user);
+    return this.usersService.putUser(params.username, user);
   }
 
-  @Delete(':email')
+  @Delete(':username')
   @Bind(Param())
   async deleteUser(params) {
-    Validator.checkEmail(params.email);
-    return this.usersService.deleteUser(params.email);
+    return this.usersService.deleteUser(params.username);
   }
 }
