@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { User } from './user.schema';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 @Dependencies(getModelToken(User.name))
@@ -36,13 +37,21 @@ export class UsersService {
     if (userExists) {
       throw new ConflictException(`User ${user.username} already exists.`);
     }
-    const createdUser = new this.userModel(user);
-    return createdUser.save();
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(user.password, salt);
+
+    const createdUser = new this.userModel({ ...user, password: hashedPassword});
+    const { password, ...userToReturn } = (await createdUser.save())._doc;
+    return userToReturn;
   }
 
   async putUser(username, user) {
     await this.getUserByUsername(username);
-    return this.userModel.updateOne({ username }, user);
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(user.password, salt);
+
+    return this.userModel.updateOne({ username }, { ...user, password: hashedPassword });
   }
 
   async deleteUser(username) {
