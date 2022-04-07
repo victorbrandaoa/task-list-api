@@ -1,6 +1,6 @@
-import { Controller, Get, Dependencies, Post, Put, Delete, Body, Bind, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Dependencies, Post, Put, Delete, Body, Bind, Param, UseGuards, HttpCode } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Validator } from '../utils';
+import { Validator, Formatter } from '../utils';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
@@ -14,19 +14,22 @@ export class UsersController {
   @Get(':username')
   @Bind(Param())
   async getUserByUsername(params) {
-    return this.usersService.getUserByUsername(params.username);
+    const user = await this.usersService.getUserByUsername(params.username);
+    return Formatter.formatUser(user);
   }
 
   @Get()
   async getAllUsers() {
-    return this.usersService.getAllUsers();
+    const users = await this.usersService.getAllUsers();
+    return users.map(Formatter.formatUser);
   }
 
   @Post()
   @Bind(Body())
   async postUser(user) {
     Validator.checkUserValidity(user);
-    return this.usersService.postUser(user);
+    const savedUser = await this.usersService.postUser(user);
+    return Formatter.formatUser(savedUser);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -34,11 +37,13 @@ export class UsersController {
   @Bind(Body(), Param())
   async putUser(user, params) {
     Validator.checkUserValidity(user);
-    return this.usersService.putUser(params.username, user);
+    const updatedUser = await this.usersService.putUser(params.username, user);
+    return Formatter.formatUser(updatedUser);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':username')
+  @HttpCode(204)
   @Bind(Param())
   async deleteUser(params) {
     return this.usersService.deleteUser(params.username);

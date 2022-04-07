@@ -42,8 +42,9 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(user.password, salt);
 
     const createdUser = new this.userModel({ ...user, password: hashedPassword});
-    const { password, ...userToReturn } = (await createdUser.save())._doc;
-    return userToReturn;
+    await createdUser.save();
+
+    return this.getUserByUsername(user.username);
   }
 
   async putUser(username, user) {
