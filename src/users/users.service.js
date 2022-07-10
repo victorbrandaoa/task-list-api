@@ -71,4 +71,13 @@ export class UsersService {
     return this.userModel.deleteOne({ username });
   }
 
+  async addCategoryToUser(username, category) {
+    const query = { $push: { categories: category._id } }
+    this.userModel.updateOne({ username }, query, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
+
 }

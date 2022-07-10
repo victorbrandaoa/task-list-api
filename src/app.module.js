@@ -4,6 +4,7 @@ import { AuthModule } from './auth';
 import { DatabaseModule } from './database.module';
 import { StatusModule } from './status';
 import { UsersModule } from './users';
+import { CategoriesModule } from './categories';
 import config from './config';
 
 @Module({
@@ -14,6 +15,7 @@ import config from './config';
     DatabaseModule,
     StatusModule,
     UsersModule,
+    CategoriesModule,
     AuthModule
   ],
   controllers: [],
