@@ -16,31 +16,38 @@ export class CategoriesController {
   @Bind(Param())
   async getCategoryFromUserByName(params) {
     const user = await this.usersService.getUserByUsername(params.username);
-    return this.categoriesService.getCategoryByOwnerAndName(user.username, params.name);
+    const category = await this.categoriesService.getCategoryByOwnerAndName(user.username, params.name);
+    return Formatter.formatCategory(category);
   }
 
   @Post()
   @Bind(Param(), Body())
   async postCategory(params, category) {
+    Validator.checkCategoryValidity(category);
     const categoryToPost = { owner: params.username, ...category };
     const savedCategory = await this.categoriesService.postCategory(categoryToPost);
-    await this.usersService.addCategoryToUser(params.username, savedCategory);
-    return savedCategory;
+    const addCategoryToUserQuery = { $push: { categories: savedCategory._id } };
+    await this.usersService.updateUserCategories(params.username, addCategoryToUserQuery);
+    return Formatter.formatCategory(savedCategory);
   }
 
   @Put(':name')
   @Bind(Param(), Body())
   async putCategory(params, category) {
     const user = await this.usersService.getUserByUsername(params.username);
-    return this.categoriesService.putCategory(params.name, user.username, category);
+    Validator.checkCategoryValidity(category);
+    const updatedCategory = await this.categoriesService.putCategory(params.name, user.username, category);
+    return Formatter.formatCategory(updatedCategory);
   }
 
   @Delete(':name')
+  @HttpCode(204)
   @Bind(Param())
   async deleteCategory(params) {
     const user = await this.usersService.getUserByUsername(params.username);
     const category = await this.categoriesService.getCategoryByOwnerAndName(user.username, params.name);
-    await this.usersService.removeCategoryFromUser(user.username, category._id);
+    const removeCategoryFromUserQuery = { $pull: { categories: category._id } };
+    await this.usersService.updateUserCategories(user.username, removeCategoryFromUserQuery);
     return this.categoriesService.deleteCategory(category._id);
   }
 }
