@@ -16,7 +16,7 @@ export class CategoriesController {
   @Bind(Param())
   async getCategoryFromUserByName(params) {
     const user = await this.usersService.getUserByUsername(params.username);
-    return this.categoriesService.getCategoryFromUserByName(user, params.name);
+    return this.categoriesService.getCategoryByOwnerAndName(user.username, params.name);
   }
 
   @Post()
@@ -24,6 +24,23 @@ export class CategoriesController {
   async postCategory(params, category) {
     const categoryToPost = { owner: params.username, ...category };
     const savedCategory = await this.categoriesService.postCategory(categoryToPost);
-    return this.usersService.addCategoryToUser(params.username, savedCategory);
+    await this.usersService.addCategoryToUser(params.username, savedCategory);
+    return savedCategory;
+  }
+
+  @Put(':name')
+  @Bind(Param(), Body())
+  async putCategory(params, category) {
+    const user = await this.usersService.getUserByUsername(params.username);
+    return this.categoriesService.putCategory(params.name, user.username, category);
+  }
+
+  @Delete(':name')
+  @Bind(Param())
+  async deleteCategory(params) {
+    const user = await this.usersService.getUserByUsername(params.username);
+    const category = await this.categoriesService.getCategoryByOwnerAndName(user.username, params.name);
+    await this.usersService.removeCategoryFromUser(user.username, category._id);
+    return this.categoriesService.deleteCategory(category._id);
   }
 }

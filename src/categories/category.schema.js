@@ -6,7 +6,7 @@ export class Category {
   @Prop({ type: mongoose.Schema.Types.String, required: true })
   name;
 
-  @Prop({ type: mongoose.Schema.Types.String, required: true, unique: true })
+  @Prop({ type: mongoose.Schema.Types.String, required: true })
   owner;
 
   @Prop({ type: mongoose.Schema.Types.String })
@@ -14,4 +14,7 @@ export class Category {
 
 }
 
-export const CategorySchema = SchemaFactory.createForClass(Category);
+const CategorySchema = SchemaFactory.createForClass(Category);
+CategorySchema.index({ name: 1, owner: 1 }, { unique: true });
+
+export { CategorySchema };
