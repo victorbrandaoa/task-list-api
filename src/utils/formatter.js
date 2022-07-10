@@ -3,4 +3,9 @@ export class Formatter {
     const { password, _id, __v, ...userToReturn } = user._doc;
     return userToReturn;
   }
+
+  static formatCategory(category) {
+    const { _id, __v, ...categoryToReturn } = category._doc;
+    return categoryToReturn;
+  }
 }
