@@ -1,14 +1,16 @@
 import { Controller, Get, Dependencies, Post, Put, Delete, Body, Bind, Param, UseGuards, HttpCode } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CategoriesService } from '../categories/categories.service';
 import { Validator, Formatter } from '../utils';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
-@Dependencies(UsersService)
+@Dependencies(UsersService, CategoriesService)
 export class UsersController {
 
-  constructor(usersService) {
+  constructor(usersService, categoriesService) {
     this.usersService = usersService;
+    this.categoriesService = categoriesService;
   }
 
   @Get(':username')
@@ -46,6 +48,8 @@ export class UsersController {
   @HttpCode(204)
   @Bind(Param())
   async deleteUser(params) {
+    const user = await this.usersService.getUserByUsername(params.username);
+    await this.categoriesService.deleteCategories(user.categories);
     return this.usersService.deleteUser(params.username);
   }
 }

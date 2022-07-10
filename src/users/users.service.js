@@ -80,4 +80,12 @@ export class UsersService {
     });
   }
 
+  async removeCategoryFromUser(username, category) {
+    const query = { $pull: { categories: category._id } }
+    this.userModel.updateOne({ username }, query, function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  }
 }
