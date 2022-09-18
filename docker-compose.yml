@@ -6,6 +6,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./:/app:cached
+      - /app/node_modules
     ports:
       - ${API_PORT}:${API_PORT}
     depends_on:
